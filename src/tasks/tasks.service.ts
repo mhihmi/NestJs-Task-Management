@@ -28,4 +28,8 @@ export class TasksService {
     this.tasks.push(task);
     return task;
   }
+
+  async deleteTask(id: string): Promise<void> {
+    this.tasks = this.tasks.filter((task) => task.id !== id);
+  }
 }
