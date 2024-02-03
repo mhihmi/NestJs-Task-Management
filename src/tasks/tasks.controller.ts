@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { Task } from './task.model';
+import { CreateTaskDto } from './dto/create-task.dto';
 
 @Controller('tasks')
 export class TasksController {
@@ -19,11 +20,8 @@ export class TasksController {
 
   // 2nd method more strict on incoming datas
   @Post()
-  async createTask(
-    @Body('title') title: string,
-    @Body('description') description: string,
-  ): Promise<Task> {
-    return this.tasksService.createTask(title, description);
+  async createTask(@Body() createTaskDto: CreateTaskDto): Promise<Task> {
+    return this.tasksService.createTask(createTaskDto);
   }
 }
 
