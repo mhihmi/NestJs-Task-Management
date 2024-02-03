@@ -7,7 +7,7 @@ export class TasksController {
   constructor(private tasksService: TasksService) {}
 
   @Get()
-  getAllTasks(): Task[] {
+  async getAllTasks(): Promise<Task[]> {
     return this.tasksService.getAllTasks();
   }
 
@@ -19,10 +19,10 @@ export class TasksController {
 
   // 2nd method more strict on incoming datas
   @Post()
-  createTask(
+  async createTask(
     @Body('title') title: string,
     @Body('description') description: string,
-  ): Task {
+  ): Promise<Task> {
     return this.tasksService.createTask(title, description);
   }
 }
