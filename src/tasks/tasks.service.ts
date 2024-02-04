@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Task, TaskStatus } from './task.model';
 import { v4 as uuid } from 'uuid';
 import { CreateTaskDto } from './dto/create-task.dto';
+import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 
 @Injectable()
 export class TasksService {
@@ -9,6 +10,38 @@ export class TasksService {
 
   async getAllTasks(): Promise<Task[]> {
     return this.tasks;
+  }
+
+  async getTasksWithFilters(filterDto: GetTasksFilterDto): Promise<Task[]> {
+    // simpler way to do it, but we'll use ORM later..
+    const { status, search } = filterDto;
+
+    // define a temporary array to hold the result
+    let tasks = await this.getAllTasks();
+
+    // do something with status
+    if (status) {
+      tasks = tasks.filter((task) => task.status === status);
+    }
+
+    // do something with search
+    // if (search) {
+    //   tasks = tasks.filter((task) => {
+    //     if (task.title.includes(search) || task.description.includes(search)) {
+    //       return true;
+    //     }
+    //     return false;
+    //   });
+    // }
+    if (search) {
+      tasks = tasks.filter(
+        (task) =>
+          task.title.includes(search) || task.description.includes(search),
+      );
+    }
+
+    // return final result
+    return tasks;
   }
 
   async getTaskById(id: string): Promise<Task> {
