@@ -25,6 +25,20 @@ export class TasksService {
 
     return found;
   }
+
+  async createTask(createTaskDto: CreateTaskDto): Promise<Task> {
+    const { title, description } = createTaskDto;
+
+    const task = this.taskRepository.create({
+      title,
+      description,
+      status: TaskStatus.OPEN,
+    });
+
+    await this.taskRepository.save(task);
+    return task;
+  }
+
   // Without TypeORM //
   // private tasks: Task[] = [];
   // async getAllTasks(): Promise<Task[]> {
@@ -58,17 +72,6 @@ export class TasksService {
   //   return tasks;
   // }
 
-  // async createTask(createTaskDto: CreateTaskDto): Promise<Task> {
-  //   const { title, description } = createTaskDto;
-  //   const task: Task = {
-  //     id: uuid(),
-  //     title,
-  //     description,
-  //     status: TaskStatus.OPEN,
-  //   };
-  //   this.tasks.push(task);
-  //   return task;
-  // }
   // async deleteTask(id: string): Promise<void> {
   //   const found = await this.getTaskById(id); // for error handler
   //   this.tasks = this.tasks.filter((task) => task.id !== found.id); // not best option but we'll use ORM later

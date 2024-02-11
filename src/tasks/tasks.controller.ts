@@ -24,6 +24,11 @@ export class TasksController {
     return this.tasksService.getTaskById(id);
   }
 
+  @Post()
+  async createTask(@Body() createTaskDto: CreateTaskDto): Promise<Task> {
+    return this.tasksService.createTask(createTaskDto);
+  }
+
   // Without TypeORM //
   // // http://localhost:3000/tasks
   // // @Get()
@@ -40,18 +45,6 @@ export class TasksController {
   //     // otherwise, just get all tasks
   //     return this.tasksService.getAllTasks();
   //   }
-  // }
-
-  // // 1st method
-  // // @Post()
-  // // createTask(@Body() body) {
-  // //   console.log('body', body);
-  // // }
-
-  // // 2nd method more strict on incoming datas
-  // @Post()
-  // async createTask(@Body() createTaskDto: CreateTaskDto): Promise<Task> {
-  //   return this.tasksService.createTask(createTaskDto);
   // }
 
   // // http://localhost:3000/tasks/j1g251b16f1vb16f
