@@ -12,10 +12,17 @@ import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 import { UpdateTaskStatusDto } from './dto/update-task-status.dto';
+import { Task } from './task.entity';
 
 @Controller('tasks')
 export class TasksController {
   constructor(private tasksService: TasksService) {}
+  // With TypeORM //
+
+  @Get(':id')
+  async getTaskById(@Param('id') id: string): Promise<Task> {
+    return this.tasksService.getTaskById(id);
+  }
 
   // Without TypeORM //
   // // http://localhost:3000/tasks
@@ -33,12 +40,6 @@ export class TasksController {
   //     // otherwise, just get all tasks
   //     return this.tasksService.getAllTasks();
   //   }
-  // }
-
-  // // http://localhost:3000/tasks/j1g251b16f1vb16f
-  // @Get(':id')
-  // async getTaskById(@Param('id') id: string): Promise<Task> {
-  //   return this.tasksService.getTaskById(id);
   // }
 
   // // 1st method
