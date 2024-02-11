@@ -71,7 +71,9 @@ export class TasksService {
   }
 
   async deleteTask(id: string): Promise<void> {
-    this.tasks = this.tasks.filter((task) => task.id !== id);
+    const found = await this.getTaskById(id); // for error handler
+
+    this.tasks = this.tasks.filter((task) => task.id !== found.id); // not best option but we'll use ORM later
   }
 
   async updateTaskStatus(id: string, status: TaskStatus): Promise<Task> {
