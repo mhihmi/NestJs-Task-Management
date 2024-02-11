@@ -29,6 +29,11 @@ export class TasksController {
     return this.tasksService.createTask(createTaskDto);
   }
 
+  @Delete(':id')
+  async deleteTask(@Param('id') id: string): Promise<void> {
+    return this.tasksService.deleteTask(id); // return is permitted here as if void
+  }
+
   // Without TypeORM //
   // // http://localhost:3000/tasks
   // // @Get()
@@ -45,12 +50,6 @@ export class TasksController {
   //     // otherwise, just get all tasks
   //     return this.tasksService.getAllTasks();
   //   }
-  // }
-
-  // // http://localhost:3000/tasks/j1g251b16f1vb16f
-  // @Delete(':id')
-  // async deleteTask(@Param('id') id: string): Promise<void> {
-  //   return this.tasksService.deleteTask(id); // return is permitted here as if void
   // }
 
   // @Patch(':id/status')

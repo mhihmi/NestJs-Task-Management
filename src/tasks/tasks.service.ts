@@ -39,6 +39,15 @@ export class TasksService {
     return task;
   }
 
+  async deleteTask(id: string): Promise<void> {
+    // delete() is better than remove(), less call to the db, we don't need to check if item exist first.
+    const result = await this.taskRepository.delete(id);
+
+    if (result.affected === 0) {
+      throw new NotFoundException(`Task with ID "${id}" not found`);
+    }
+  }
+
   // Without TypeORM //
   // private tasks: Task[] = [];
   // async getAllTasks(): Promise<Task[]> {
@@ -72,10 +81,6 @@ export class TasksService {
   //   return tasks;
   // }
 
-  // async deleteTask(id: string): Promise<void> {
-  //   const found = await this.getTaskById(id); // for error handler
-  //   this.tasks = this.tasks.filter((task) => task.id !== found.id); // not best option but we'll use ORM later
-  // }
   // async updateTaskStatus(id: string, status: TaskStatus): Promise<Task> {
   //   const task = await this.getTaskById(id);
   //   task.status = status;
