@@ -34,6 +34,17 @@ export class TasksController {
     return this.tasksService.deleteTask(id); // return is permitted here as if void
   }
 
+  @Patch(':id/status')
+  async updateTaskStatus(
+    @Param('id') id: string,
+    @Body() updateTaskStatusDto: UpdateTaskStatusDto,
+  ): Promise<Task> {
+    // We can destructuring or pass the updateTaskStatusDto to the service too
+    const { status } = updateTaskStatusDto;
+
+    return this.tasksService.updateTaskStatus(id, status);
+  }
+
   // Without TypeORM //
   // // http://localhost:3000/tasks
   // // @Get()
@@ -50,17 +61,6 @@ export class TasksController {
   //     // otherwise, just get all tasks
   //     return this.tasksService.getAllTasks();
   //   }
-  // }
-
-  // @Patch(':id/status')
-  // async updateTaskStatus(
-  //   @Param('id') id: string,
-  //   @Body() updateTaskStatusDto: UpdateTaskStatusDto,
-  // ): Promise<Task> {
-  //   // We can destructuring or pass the updateTaskStatusDto to the service too
-  //   const { status } = updateTaskStatusDto;
-
-  //   return this.tasksService.updateTaskStatus(id, status);
   // }
 }
 
