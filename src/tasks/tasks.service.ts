@@ -5,11 +5,9 @@ import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Task } from './task.entity';
 import { Repository } from 'typeorm';
-// import { v4 as uuid } from 'uuid'; // Without TypeORM
 
 @Injectable()
 export class TasksService {
-  // With TypeORM //
   constructor(
     @InjectRepository(Task)
     private taskRepository: Repository<Task>,
@@ -57,36 +55,23 @@ export class TasksService {
     return task;
   }
 
-  // Without TypeORM //
-  // private tasks: Task[] = [];
-  // async getAllTasks(): Promise<Task[]> {
-  //   return this.tasks;
-  // }
-  // async getTasksWithFilters(filterDto: GetTasksFilterDto): Promise<Task[]> {
-  //   // simpler way to do it, but we'll use ORM later..
-  //   const { status, search } = filterDto;
-  //   // define a temporary array to hold the result
-  //   let tasks = await this.getAllTasks();
-  //   // do something with status
-  //   if (status) {
-  //     tasks = tasks.filter((task) => task.status === status);
-  //   }
-  //   // do something with search
-  //   // if (search) {
-  //   //   tasks = tasks.filter((task) => {
-  //   //     if (task.title.includes(search) || task.description.includes(search)) {
-  //   //       return true;
-  //   //     }
-  //   //     return false;
-  //   //   });
-  //   // }
-  //   if (search) {
-  //     tasks = tasks.filter(
-  //       (task) =>
-  //         task.title.includes(search) || task.description.includes(search),
-  //     );
-  //   }
-  //   // return final result
-  //   return tasks;
-  // }
+  async getTasks(filterDto: GetTasksFilterDto): Promise<Task[]> {
+    const { status, search } = filterDto;
+    const query = this.taskRepository.createQueryBuilder('task');
+
+    if (status) {
+      query.andWhere('task.status = :status', { status });
+    }
+
+    if (search) {
+      query.andWhere(
+        'LOWER(task.title) LIKE LOWER(:search) OR LOWER(task.description) LIKE LOWER(:search)',
+        // '(task.title LIKE :search OR task.description LIKE :search)',
+        { search: `%${search}%` },
+      );
+    }
+
+    const tasks = await query.getMany();
+    return tasks;
+  }
 }

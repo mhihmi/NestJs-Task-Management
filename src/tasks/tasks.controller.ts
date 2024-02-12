@@ -17,7 +17,6 @@ import { Task } from './task.entity';
 @Controller('tasks')
 export class TasksController {
   constructor(private tasksService: TasksService) {}
-  // With TypeORM //
 
   @Get(':id')
   async getTaskById(@Param('id') id: string): Promise<Task> {
@@ -31,7 +30,7 @@ export class TasksController {
 
   @Delete(':id')
   async deleteTask(@Param('id') id: string): Promise<void> {
-    return this.tasksService.deleteTask(id); // return is permitted here as if void
+    return this.tasksService.deleteTask(id);
   }
 
   @Patch(':id/status')
@@ -45,42 +44,8 @@ export class TasksController {
     return this.tasksService.updateTaskStatus(id, status);
   }
 
-  // Without TypeORM //
-  // // http://localhost:3000/tasks
-  // // @Get()
-  // // async getAllTasks(): Promise<Task[]> {
-  // //   return this.tasksService.getAllTasks();
-  // // }
-  // // adding filters from query:
-  // @Get()
-  // async getTasks(@Query() filterDto: GetTasksFilterDto): Promise<Task[]> {
-  //   if (Object.keys(filterDto).length) {
-  //     // if we have any filters defined, call taskService.getTasksWithFilters
-  //     return this.tasksService.getTasksWithFilters(filterDto);
-  //   } else {
-  //     // otherwise, just get all tasks
-  //     return this.tasksService.getAllTasks();
-  //   }
-  // }
+  @Get()
+  async getTasks(@Query() filterDto: GetTasksFilterDto): Promise<Task[]> {
+    return this.tasksService.getTasks(filterDto);
+  }
 }
-
-///////////////////////////////////////////////////////////////////////
-// @Controller('tasks')
-// export class TasksController {
-//   constructor(private tasksService: TasksService) {}
-// }
-
-// Same As (without helloWorld Method)
-
-// @Controller('tasks')
-// export class TasksController {
-//   tasksService: TasksService;
-
-//   constructor(tasksService: TasksService) {
-//     this.tasksService = tasksService;
-//   }
-
-//   helloWorld() {
-//     this.tasksService.doSomething();
-//   }
-// }
