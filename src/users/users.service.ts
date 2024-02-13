@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
+import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 
 @Injectable()
 export class UsersService {
@@ -10,13 +11,24 @@ export class UsersService {
     private userRepository: Repository<User>,
   ) {}
 
-  //   async getUserById(id: string): Promise<User> {
-  //     const found = await this.userRepository.findOneBy({ id: id });
+  async createUser(authCredentialsDto: AuthCredentialsDto): Promise<void> {
+    const { username, password } = authCredentialsDto;
 
-  //     if (!found) {
-  //       throw new NotFoundException(`Task with ID "${id}" not Found`);
-  //     }
+    const user = this.userRepository.create({
+      username,
+      password,
+    });
 
-  //     return found;
-  //   }
+    await this.userRepository.save(user);
+  }
+
+  async getUserById(id: string): Promise<User> {
+    const found = await this.userRepository.findOneBy({ id: id });
+
+    if (!found) {
+      throw new NotFoundException(`User with ID "${id}" not Found`);
+    }
+
+    return found;
+  }
 }
